@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(lanelet2_extension)
 
+SET(CMAKE_BUILD_TYPE "Debug")
+SET(CMAKE_CXX_FLAGS_DEBUG "$ENV{CXXFLAGS} -O0 -Wall -g2 -ggdb")
+
 find_package(PkgConfig)
 find_path(
   GeographicLib_INCLUDE_DIR GeographicLib/Config.h

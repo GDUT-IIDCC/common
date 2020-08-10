@@ -52,6 +52,9 @@ double find_distance(const geometry_msgs::Pose &_from, const geometry_msgs::Pose
   return find_distance(_from.position, _to.position);
 }
 
+/**
+ * @brief 两点构成直线的斜率
+ */
 double find_angle(const geometry_msgs::Point &_from, const geometry_msgs::Point &_to)
 {
   double _angle = std::atan2(_to.y - _from.y, _to.x - _from.x);
@@ -61,6 +64,9 @@ double find_angle(const geometry_msgs::Point &_from, const geometry_msgs::Point 
   return _angle * 360 / (2 * M_PI);
 }
 
+/**
+ * @brief 是否相交
+ */
 bool isIntersectLine(const geometry_msgs::Point &_l1_p1, const geometry_msgs::Point &_l1_p2,
                      const geometry_msgs::Point &_l2_p1, const geometry_msgs::Point &_l2_p2)
 {
@@ -99,6 +105,9 @@ int isPointLeftFromLine(const geometry_msgs::Point &_target, const geometry_msgs
 // Author: Dan Sunday
 // site: http://geomalgorithms.com/a02-_lines.html
 // viewed: 2019/5/20
+/**
+ * @brief 点到直线距离
+ */
 double distanceFromSegment(
   const geometry_msgs::Point &_l1, const geometry_msgs::Point &_l2, const geometry_msgs::Point &_p)
 {
@@ -132,7 +141,9 @@ double distanceFromSegment(
 
   return find_distance(_p, pb);
 }
-
+/**
+ * @brief 提取偏航角
+ */
 double getPoseYawAngle(const geometry_msgs::Pose &_pose)
 {
   double r, p, y;
@@ -143,19 +154,25 @@ double getPoseYawAngle(const geometry_msgs::Pose &_pose)
   tf::Matrix3x3(quat).getRPY(r, p, y);
   return y;
 }
-
+/**
+ * @brief 计算四元数rpy=(0,0,yaw)
+ */
 geometry_msgs::Quaternion getQuaternionFromYaw(const double &_yaw)
 {
   tf2::Quaternion q;
   q.setRPY(0, 0, _yaw);
   return tf2::toMsg(q);
 }
-
+/**
+ * @brief 计算两位姿的偏航角差距
+ */
 double calcPosesAngleDiffRaw(const geometry_msgs::Pose &p_from, const geometry_msgs::Pose &_p_to)
 {
   return getPoseYawAngle(p_from) - getPoseYawAngle(_p_to);
 }
-
+/**
+ * @brief 角度->[-pi,pi]
+ */
 double normalizeRadian(const double _angle)
 {
   double n_angle = std::fmod(_angle, 2 * M_PI);
@@ -165,25 +182,33 @@ double normalizeRadian(const double _angle)
   // Math.atan2(Math.sin(_angle), Math.cos(_angle));
   return n_angle;
 }
-
+/**
+ * @brief 计算两位姿的偏航角差距deg
+ */
 double calcPosesAngleDiffDeg(const geometry_msgs::Pose &_p_from, const geometry_msgs::Pose &_p_to)
 {
   // convert to [-pi : pi]
   return rad2deg(normalizeRadian(calcPosesAngleDiffRaw(_p_from, _p_to)));
 }
-
+/**
+ * @brief 计算两位姿的偏航角差距rad
+ */
 double calcPosesAngleDiffRad(const geometry_msgs::Pose &_p_from, const geometry_msgs::Pose &_p_to)
 {
   // convert to [-pi : pi]
   return normalizeRadian(calcPosesAngleDiffRaw(_p_from, _p_to));
 }
-
+/**
+ * @brief 计算两直线交点
+ */
 bool getIntersect(geometry_msgs::Point p1, geometry_msgs::Point p2, geometry_msgs::Point p3,
   geometry_msgs::Point p4, geometry_msgs::Point* intersect)
 {
   return getIntersect(p1.x, p1.y, p2.x, p2.y, p3.x, p3.y, p4.x, p4.y, &intersect->x, &intersect->y);
 }
-
+/**
+ * @brief 计算两直线交点
+ */
 bool getIntersect(double x1, double y1, double x2, double y2, double x3, double y3, double x4,
   double y4, double* intersect_x, double* intersect_y )
 {

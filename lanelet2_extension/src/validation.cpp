@@ -72,8 +72,12 @@ void validateElevationTag(const std::string filename)
     if (!node.find_child_by_attribute(keyword::Tag, keyword::Key, keyword::Elevation))
     {
       ROS_ERROR_STREAM("failed to find elevation tag for node: " << id);
+      pugi::xml_node ele = node.append_child(keyword::Tag);
+      ele.append_attribute("k") = "ele";
+      ele.append_attribute("v") = 0;
     }
   }
+  doc.save_file("./gdut_parse.xml");
 }
 
 void validateTrafficLight(const lanelet::LaneletMapPtr lanelet_map)
@@ -130,10 +134,14 @@ void validateTurnDirection(const lanelet::LaneletMapPtr lanelet_map)
     exit(1);
   }
 
+  std::cout << "rule loading" << std::endl;
   lanelet::traffic_rules::TrafficRulesPtr traffic_rules =
       lanelet::traffic_rules::TrafficRulesFactory::create(lanelet::Locations::Germany, lanelet::Participants::Vehicle);
+      
+  std::cout << "rule loading" << std::endl;
   lanelet::routing::RoutingGraphPtr vehicle_graph = lanelet::routing::RoutingGraph::build(*lanelet_map, *traffic_rules);
 
+  std::cout << "rule loaded" << std::endl;
   for (const auto& lanelet : lanelet_map->laneletLayer)
   {
     if (!traffic_rules->canPass(lanelet))
@@ -171,12 +179,15 @@ int main(int argc, char* argv[])
   lanelet::LaneletMapPtr lanelet_map;
   lanelet::ErrorMessages errors;
   lanelet::projection::MGRSProjector projector;
+  std::cout << "1" << std::endl;
   lanelet_map = lanelet::load(map_path, "autoware_osm_handler", projector, &errors);
 
   std::cout << "starting validation" << std::endl;
 
   validateElevationTag(map_path);
+  std::cout << "2" << std::endl;
   validateTrafficLight(lanelet_map);
+  std::cout << "3" << std::endl;
   validateTurnDirection(lanelet_map);
 
   std::cout << "finished validation" << std::endl;

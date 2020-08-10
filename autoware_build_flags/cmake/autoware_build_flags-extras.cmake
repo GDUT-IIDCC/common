@@ -12,7 +12,7 @@ else()
 endif()
 
 message(STATUS "CUDA compilation status: $ENV{AUTOWARE_COMPILE_WITH_CUDA}.")
-
+set(CATKIN_ENABLE_TESTING OFF)
 macro(AW_CHECK_CUDA)
   if ($ENV{AUTOWARE_COMPILE_WITH_CUDA})
     find_package(CUDA REQUIRED)
