@@ -77,7 +77,7 @@ void validateElevationTag(const std::string filename)
       ele.append_attribute("v") = 0;
     }
   }
-  doc.save_file("./gdut_parse.xml");
+  // doc.save_file(filename);
 }
 
 void validateTrafficLight(const lanelet::LaneletMapPtr lanelet_map)
